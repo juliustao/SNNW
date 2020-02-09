@@ -1,5 +1,8 @@
-import numpy as np
 import os
+
+import numpy as np
+from tqdm import tqdm
+
 from Layer import Layer
 import losses
 import activations
@@ -20,9 +23,9 @@ name2derivative = {
 
 
 class Model:
-    def __init__(self, x_in, y_true, model_config, loss_class=None):
+    def __init__(self, x_input, y_true, model_config, loss_class=None):
         # x_in = [# examples x len(x)] numpy array
-        self.x_in = x_in
+        self.x_input = x_input
 
         # y = [# examples x 1] numpy array
         self.y_true = y_true
@@ -33,7 +36,7 @@ class Model:
 
         # first check that the dimensions of everything match up
         dim_error_str = "Model config dimensions do not match. (in_size of layer i != out_size of layer i-1)"
-        assert (self.x_in.shape[1] == model_config[0]['in_size']), dim_error_str
+        assert (self.x_input.shape[1] == model_config[0]['in_size']), dim_error_str
         for i in range(1, len(model_config)):
             assert (model_config[i-1]['out_size'] == model_config[i]['in_size']), dim_error_str
 
@@ -53,7 +56,7 @@ class Model:
         # only loss supported is cross-entropy
         self.loss_class = losses.CrossEntropy
 
-    def forward(self, x_in, y_true):
+    def forward(self, x_in, y_gt):
         # x_in shape: [1 x len(x_in)]
         y = x_in
         for layer in self.layers:
@@ -62,19 +65,18 @@ class Model:
             layer.output = y
         # this should get logits array
         y_pred = y
-        E = self.loss_class.function(y_pred=y_pred, y_true=y_true)
+        E = self.loss_class.function(y_pred=y_pred, y_gt=y_gt)
         return y_pred, E
 
-    def forward_and_backward(self, x_in, y_true, learning_rate):
+    def forward_and_backward(self, x_in, y_gt, learning_rate):
         # get logits from forward pass
-        y_pred, E = self.forward(x_in, y_true)
+        y_pred, E = self.forward(x_in, y_gt)
 
         for i in range(0, len(self.layers), -1):
             # shape: [1 x len(logits)]
             # ??? What if the derivative depends on the actual coordinates ???
             if i == len(self.layers) - 1:
                 # special case for loss layer
-                # dEdy = name2derivative[self.loss_fn](y_pred=y_pred, y_true=self.y_true)
                 # We only have Cross-Entropy loss, so just calculate derivative of loss with respect to x before softmax
                 dEdx = self.layers[i].output - y_pred
             else:
@@ -86,7 +88,7 @@ class Model:
             # shape: [len(prev_layer) x len(logits)]
             if i == 0:
                 # special case for input layer
-                dEdw = np.matmul(self.x_in.T, dEdx)
+                dEdw = np.matmul(self.x_input.T, dEdx)
             else:
                 dEdw = np.matmul(self.layers[i - 1].output.T, dEdx)
 
@@ -99,27 +101,53 @@ class Model:
 
         return y_pred, E
 
-    def train(self, steps, learning_rate):
-        total = self.x_in.shape[0]
-        correct = 0
-        for i in range(steps):
-            ind = total * np.random.uniform()
-            x = self.x_in[ind:ind+1, :]
-            y_pred, loss = self.forward_and_backward(x, learning_rate)
-            if np.argmax(y_pred) == np.argmax(self.y_true[ind, :]):
-                correct += 1
+    def train(self, steps, learning_rate, save_dir):
+        for i in tqdm(range(steps)):
+            # stochastic gradient descent
+            ind = self.x_input.shape[0] * np.random.uniform()
+            x_in = self.x_input[ind:ind+1, :]
+            y_gt = self.y_true[ind:ind+1, :]
+            y_pred, loss = self.forward_and_backward(x_in, y_gt, learning_rate)
             if i % 10:
-                print('Train step {}: Loss = {:8}'.format(i, loss))
-        accuracy = correct / float(total)
-        print('Accuracy: {:8}'.format(accuracy))
+                print('Train step {}: \t\tLoss = {:8}'.format(i, loss))
 
-        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'weights.npz')
+        print('Finished training. Saving weights and biases...')
+
         weight_arr = []
-        for layer in self.layers:
+        bias_arr = []
+        for layer in tqdm(self.layers):
             weight_arr.append(layer.weights)
+            bias_arr.append(layer.biases)
         # to access the weights of layer 3: weight_arr['arr_3']
-        np.savez(path, *weight_arr)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+        np.savez(os.path.join(save_dir, 'weights.npy'), *weight_arr)
+        np.savez(os.path.join(save_dir, 'biases.npy'), *bias_arr)
+
+        print('Finished saving weights and biases.')
         return
 
-    def evaluate(self):
-        pass
+    def evaluate(self, save_dir):
+        # load weights and biases
+        weights_dict = np.load(os.path.join(save_dir, 'weights.npy'))
+        biases_dict = np.load(os.path.join(save_dir, 'biases.npy'))
+        assert (len(weights_dict) == len(self.layers)), "saved weights' shape != model weights' shape"
+        assert (len(biases_dict) == len(self.layers)), "saved biases' shape != model biases' shape"
+
+        # set model's weights and biases to the loaded weights and biases
+        for i in range(len(self.layers)):
+            layer = self.layers[i]
+            key = 'arr_{}'.format(i)
+            layer.weights = weights_dict[key]
+            layer.biases = biases_dict[key]
+
+        # evaluate for each test image
+        correct = 0
+        for i in range(self.x_input.shape[0]):
+            x_in = self.x_input[i:i+1, :]
+            y_gt = self.y_true[i:i+1, :]
+            y_pred, E = self.forward(x_in, y_gt)
+            if np.argmax(y_pred) == np.argmax(self.y_true[i, :]):
+                correct += 1
+            print('Evaluate step {}: \t\tLoss = {:8} \t\tAccuracy = {:8}'.format(i, E, correct / float(i)))
+        print('Finished evaluating')
