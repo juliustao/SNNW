@@ -2,8 +2,8 @@ import numpy as np
 
 
 def function(x):
-    pass
+    return np.tanh(x)
 
 
 def derivative(x):
-    pass
+    return 1.0 - np.tanh(x) ** 2

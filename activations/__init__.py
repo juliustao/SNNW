@@ -1,4 +1,4 @@
-import ReLu
-import Sigmoid
-import Softmax
-import Tanh
+import relu
+import sigmoid
+import softmax
+import tanh
