@@ -132,5 +132,10 @@ dmypy.json
 
 train/*
 test/*
+
 train.txt
 test.txt
+
+*.npy
+
+.idea
