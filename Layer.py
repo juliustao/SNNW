@@ -10,10 +10,11 @@ class Layer:
         self.in_size = in_size
         # out_size is number of neurons in current layer
         self.out_size = out_size
+        # activation function name
         self.activation = activation
-        # make weight list
+        # make weight array
         self.weights = np.random.normal(size=(self.in_size, self.out_size))
-        # make bias list
+        # make bias array
         self.biases = np.random.normal(size=(1, self.out_size))
-
-
+        # make output array
+        self.output = None
