@@ -1,9 +1,6 @@
-import numpy as np
-
-
 def function(x):
-    pass
+    return x * (x > 0)
 
 
 def derivative(x):
-    pass
+    return x > 0
