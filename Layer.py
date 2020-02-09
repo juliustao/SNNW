@@ -12,9 +12,9 @@ class Layer:
         self.out_size = out_size
         # activation function name
         self.activation = activation
-        # make weight array
+        # make random weight array
         self.weights = np.random.normal(size=(self.in_size, self.out_size))
-        # make bias array
+        # make random bias array
         self.biases = np.random.normal(size=(1, self.out_size))
         # make output array
         self.output = None
