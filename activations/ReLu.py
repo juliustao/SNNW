@@ -1,9 +1,9 @@
 import numpy as np
 
 
-def function(self):
+def function(x):
     pass
 
 
-def derivative(self):
+def derivative(x):
     pass
