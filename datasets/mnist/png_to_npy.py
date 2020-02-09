@@ -2,15 +2,16 @@ import os
 from tqdm import tqdm
 from PIL import Image
 import numpy as np
+import save_dirs
 
 
-def save_png_as_np(split):
-    with open(split + '.txt', 'r') as f:
+def mnist_png_to_np(split, png_dir, npy_dir):
+    with open(os.path.join(png_dir, split + '.txt'), 'r') as f:
         paths = f.read().splitlines()
     # number of labels
     labels = 0
     # doesn't matter what path we use to get the split directory name
-    split_dir = os.path.basename(os.path.dirname(os.path.dirname(paths[0])))
+    split_dir = os.path.dirname(os.path.dirname(paths[0]))
     for _, dirnames, _ in os.walk(split_dir):
         labels += len(dirnames)
 
@@ -28,13 +29,14 @@ def save_png_as_np(split):
         np_label = np.zeros(shape=(1, labels))
         np_label[0, label] = 1.0
         np_labels.append(np_label)
-    np.save(split + '-images.npy', np_images)
-    np.save(split + '-labels.npy', np_labels)
+    np.save(os.path.join(npy_dir, split + '-images.npy'), np_images)
+    np.save(os.path.join(npy_dir, split + '-labels.npy'), np_labels)
 
 
 if __name__ == '__main__':
-    # assumes that train.txt and test.txt are in the same directory
-    splits = ['test']
+    png_dir = save_dirs.png_dir
+    npy_dir = save_dirs.npy_dir
+    splits = ['train', 'test']
     for split in splits:
         print('Current split: ' + split)
-        save_png_as_np(split)
+        mnist_png_to_np(split, png_dir, npy_dir)
