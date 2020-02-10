@@ -3,22 +3,29 @@ import os
 import numpy as np
 from tqdm import tqdm
 
-import losses
-import activations
+from losses import cross_entropy
+from activations import relu
+from activations import sigmoid
+from activations import softmax
+from activations import tanh
 
 name2function = {
-    'ReLu': activations.relu.function,
-    'Sigmoid': activations.sigmoid.function,
-    'Softmax': activations.softmax.function,
-    'Tanh': activations.tanh.function,
+    'relu': relu.function,
+    'sigmoid': sigmoid.function,
+    'softmax': softmax.function,
+    'tanh': tanh.function,
 }
 
 name2derivative = {
-    'ReLu': activations.relu.derivative,
-    'Sigmoid': activations.sigmoid.derivative,
-    # 'Softmax': activations.Softmax.derivative,
-    'Tanh': activations.tanh.derivative,
+    'relu': relu.derivative,
+    'sigmoid': sigmoid.derivative,
+    # 'softmax': softmax.derivative,
+    'tanh': tanh.derivative,
 }
+
+
+def kaiming(in_size, out_size):
+    return np.random.normal(size=(in_size, out_size)) * np.sqrt(2.0/in_size)
 
 
 class Layer:
@@ -33,9 +40,9 @@ class Layer:
         # activation function name
         self.activation = activation
         # make random weight array
-        self.weights = np.random.normal(size=(self.in_size, self.out_size))
+        self.weights = kaiming(in_size, out_size)
         # make random bias array
-        self.biases = np.random.normal(size=(1, self.out_size))
+        self.biases = np.zeros(shape=(1, self.out_size))
         # make output array
         self.output = None
 
@@ -72,7 +79,7 @@ class Model:
             self.layers.append(layer)
 
         # only loss supported is cross-entropy
-        self.loss_class = losses.CrossEntropy
+        self.loss_class = cross_entropy
 
     def forward(self, x_in, y_gt):
         # x_in shape: [1 x len(x_in)]
@@ -90,13 +97,13 @@ class Model:
         # get logits from forward pass
         y_pred, E = self.forward(x_in, y_gt)
 
-        for i in range(0, len(self.layers), -1):
+        for i in range(len(self.layers) - 1, -1, -1):
             # shape: [1 x len(logits)]
             # ??? What if the derivative depends on the actual coordinates ???
             if i == len(self.layers) - 1:
                 # special case for loss layer
                 # We only have Cross-Entropy loss, so just calculate derivative of loss with respect to x before softmax
-                dEdx = self.layers[i].output - y_pred
+                dEdx = y_pred * np.sum(y_gt) - y_gt
             else:
                 dEdy = np.matmul(dEdx, self.layers[i+1].weights.T)
                 # shape: [1 x len(logits)]
@@ -122,11 +129,11 @@ class Model:
     def train(self, steps, learning_rate, model_dir):
         for i in tqdm(range(steps)):
             # stochastic gradient descent
-            ind = self.x_input.shape[0] * np.random.uniform()
-            x_in = self.x_input[ind:ind+1, :]
-            y_gt = self.y_true[ind:ind+1, :]
+            idx = int(self.x_input.shape[0] * np.random.uniform())
+            x_in = self.x_input[idx:idx+1, :]
+            y_gt = self.y_true[idx:idx+1, :]
             y_pred, loss = self.forward_and_backward(x_in, y_gt, learning_rate)
-            if i % 10:
+            if i % 10 == 0:
                 print('Train step {}: \t\tLoss = {:8}'.format(i, loss))
 
         print('Finished training. Saving weights and biases...')
@@ -139,16 +146,16 @@ class Model:
         # to access the weights of layer 3: weight_arr['arr_3']
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
-        np.savez(os.path.join(model_dir, 'weights.npy'), *weight_arr)
-        np.savez(os.path.join(model_dir, 'biases.npy'), *bias_arr)
+        np.savez(os.path.join(model_dir, 'weights.npz'), *weight_arr)
+        np.savez(os.path.join(model_dir, 'biases.npz'), *bias_arr)
 
         print('Finished saving weights and biases.')
         return
 
     def evaluate(self, model_dir):
         # load weights and biases
-        weights_dict = np.load(os.path.join(model_dir, 'weights.npy'))
-        biases_dict = np.load(os.path.join(model_dir, 'biases.npy'))
+        weights_dict = np.load(os.path.join(model_dir, 'weights.npz'))
+        biases_dict = np.load(os.path.join(model_dir, 'biases.npz'))
         assert (len(weights_dict) == len(self.layers)), "saved weights' shape != model weights' shape"
         assert (len(biases_dict) == len(self.layers)), "saved biases' shape != model biases' shape"
 
@@ -167,5 +174,6 @@ class Model:
             y_pred, E = self.forward(x_in, y_gt)
             if np.argmax(y_pred) == np.argmax(self.y_true[i, :]):
                 correct += 1
-            print('Evaluate step {}: \t\tLoss = {:8} \t\tAccuracy = {:8}'.format(i, E, correct / float(i)))
+            if i % 10 == 0:
+                print('Evaluate step {}: \t\tLoss = {:8} \t\tAccuracy = {:8}'.format(i, E, correct / float(i)))
         print('Finished evaluating')
