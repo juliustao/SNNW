@@ -8,8 +8,8 @@ from datasets.mnist import save_dirs
 
 
 if __name__ == '__main__':
-    steps = 5000
-    learning_rate = 1e-6
+    steps = 60000
+    learning_rate = 5e-4
     model_dir = 'models/mnist_1'
 
     model_config = load_config(os.path.join(model_dir, 'config.txt'))
