@@ -128,14 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*-ubyte
-
-train/*
-test/*
-
-train.txt
-test.txt
-
-*.npy
+*/npy/*
+*/png/*
+*/raw/*
 
 .idea
