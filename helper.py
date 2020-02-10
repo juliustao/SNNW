@@ -16,9 +16,9 @@ def load_config(config_path):
             elif line[0] == '[' and line[-1] == ']':
                 layer_config['layer_type'] = line[1:-1]
             elif line[:len(in_size)] == in_size:
-                layer_config['in_size'] = line[len(in_size):]
+                layer_config['in_size'] = int(line[len(in_size):])
             elif line[:len(out_size)] == out_size:
-                layer_config['out_size'] = line[len(out_size):]
+                layer_config['out_size'] = int(line[len(out_size):])
             elif line[:len(activation)] == activation:
                 layer_config['activation'] = line[len(activation):]
         layer_configs.append(layer_config)
