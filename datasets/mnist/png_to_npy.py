@@ -19,15 +19,17 @@ def mnist_png_to_np(split, png_dir, npy_dir):
     np_labels = []
     for path in tqdm(paths):
         # np_image shape: [1 x 784]
-        np_image = np.expand_dims(np.array(Image.open(path)).flatten(), 0)
+        np_image = np.array(Image.open(path)).flatten()
+        # remember to divide by 256
+        np_image = np_image / 256.0
         np_images.append(np_image)
 
         # get label from folder name of file
         label = int(os.path.basename(os.path.dirname(path)))
 
         # np_label shape: [1 x #labels]
-        np_label = np.zeros(shape=(1, labels))
-        np_label[0, label] = 1.0
+        np_label = np.zeros(shape=labels)
+        np_label[label] = 1.0
         np_labels.append(np_label)
     np.save(os.path.join(npy_dir, split + '-images.npy'), np_images)
     np.save(os.path.join(npy_dir, split + '-labels.npy'), np_labels)
