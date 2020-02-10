@@ -105,7 +105,7 @@ class Model:
                 # We only have Cross-Entropy loss, so just calculate derivative of loss with respect to x before softmax
                 dEdx = y_pred * np.sum(y_gt) - y_gt
             else:
-                dEdy = np.matmul(dEdx, self.layers[i+1].weights.T)
+                dEdy = np.matmul(dEdx, self.layers[i + 1].weights.T)
                 # shape: [1 x len(logits)]
                 # Hadamard of dy/dx and dE/dy = dE/dx
                 dEdx = name2derivative[self.layers[i].activation](self.layers[i].output) * dEdy
@@ -113,7 +113,7 @@ class Model:
             # shape: [len(prev_layer) x len(logits)]
             if i == 0:
                 # special case for input layer
-                dEdw = np.matmul(self.x_input.T, dEdx)
+                dEdw = np.matmul(x_in.T, dEdx)
             else:
                 dEdw = np.matmul(self.layers[i - 1].output.T, dEdx)
 
@@ -133,7 +133,7 @@ class Model:
             x_in = self.x_input[idx:idx+1, :]
             y_gt = self.y_true[idx:idx+1, :]
             y_pred, loss = self.forward_and_backward(x_in, y_gt, learning_rate)
-            if i % 10 == 0:
+            if i % 100 == 0:
                 print('Train step {}: \t\tLoss = {:8}'.format(i, loss))
 
         print('Finished training. Saving weights and biases...')
@@ -174,6 +174,6 @@ class Model:
             y_pred, E = self.forward(x_in, y_gt)
             if np.argmax(y_pred) == np.argmax(self.y_true[i, :]):
                 correct += 1
-            if i % 10 == 0:
-                print('Evaluate step {}: \t\tLoss = {:8} \t\tAccuracy = {:8}'.format(i, E, correct / float(i)))
-        print('Finished evaluating')
+            if i % 100 == 0:
+                print('Evaluate step {}: \t\tLoss = {:8} \t\tAccuracy = {:8}'.format(i, E, correct / float(i + 1)))
+        print('Finished evaluating. Final accuracy: {}'.format(correct/float(self.x_input.shape[0])))
