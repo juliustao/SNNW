@@ -34,6 +34,9 @@ that the MNIST 'png' folder is in. Otherwise, you can
 feed in numpy arrays of similar form to the ones in
 the MNIST 'npy' folder.
 
+Please let me know if you have any issues running your
+custom dataset, and I will be happy to fix it!
+
 ## Get model config
 Set `config_path = ` the path to where you want to save
 the training/testing model's config file. Run
