@@ -16,10 +16,10 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'numpy == 1.18.1',
-    'pypng == 0.0.20',
-    'Pillow == 7.0.0',
-    'tqdm == 4.42.1',
+    'numpy==1.18.1',
+    'pypng==0.0.20',
+    'Pillow==7.0.0',
+    'tqdm==4.42.1',
 ]
 
 # What packages are optional?
@@ -96,7 +96,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    py_modules=['SNNW'],
+    packages=['SNNW'],
 
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
