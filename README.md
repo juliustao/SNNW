@@ -33,16 +33,16 @@ save the MNIST .npy image and label numpy arrays. Run
 Set `config_path = ` the path to where you want to save
 the training/testing model's config file. Run
 
-`SNNW.nn.config.get_config_1(config_path)`
+`SNNW.nn.config.get_config(config_path, 1)`
 or
-`SNNW.nn.config.get_config_2(config_path)`
+`SNNW.nn.config.get_config(config_path, 2)`
 
-to write a sample config file to `config_path`,
+to write sample config file 1 or 2 to `config_path`,
 or write your own config file and place it where
 `config_path` points to.
 
 If you write a custom config file, make sure that it
-follows the given format to prevent run-time errors!
+follows the given format to prevent parsing errors!
 
 
 ## Train model
