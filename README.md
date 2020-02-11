@@ -29,6 +29,11 @@ save the MNIST .npy image and label numpy arrays. Run
 
 `snnw.dataset.mnist.convert.png_to_npy(png_dir, npy_dir)`
 
+*Note:* To use a custom dataset, please use the same format
+that the MNIST 'png' folder is in. Otherwise, you can
+feed in numpy arrays of similar form to the ones in
+the MNIST 'npy' folder.
+
 ## Get model config
 Set `config_path = ` the path to where you want to save
 the training/testing model's config file. Run
