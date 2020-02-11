@@ -65,7 +65,7 @@ like to train for. The default is `60,000`.
 Set `learning_rate = ` the learning rate you would like to 
 train with. The default is `5e-4`.
 
-Run `snnw.train(model_dir, config_path, train_image_path,
+Run `snnw.run.train(model_dir, config_path, train_image_path,
 train_label_path, steps, learning_rate)`.
 
 *Note:* if you get a NaN error or "not a probability array"
@@ -86,5 +86,5 @@ the training label arrays are located.
 This file should be located inside the `npy_dir`
 you specified earlier.
 
-Run `snnw.evaluate(model_dir, config_path, test_image_path,
+Run `snnw.run.evaluate(model_dir, config_path, test_image_path,
 test_label_path)`.
