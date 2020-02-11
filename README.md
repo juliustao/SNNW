@@ -68,6 +68,12 @@ train with. The default is `5e-4`.
 Run `SNNW.train(model_dir, config_path, train_image_path,
 train_label_path, steps, learning_rate)`.
 
+*Note:* if you get a NaN error or "not a probability array"
+error, then you probably have a vanishing or exploding
+gradient problem. To fix this, try adjusting the learning rate.
+The default learning rate and number of steps included
+have been tested to work with both included models.
+
 ## Test model
 
 Set `test_image_path = ` the path to where the .npy file for
