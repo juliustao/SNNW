@@ -7,35 +7,35 @@ practice my ML skills.
 Make a new Python virtual environment (version >= 3.6).
 Install this project with pip. In terminal, run
 
-`pip3 install SNNW`
+`pip3 install snnw`
 
 ## Download MNIST dataset
 Open a new Python shell or Jupyter Notebook and run
 
-`import SNNW`
+`import snnw`
 
 Set `raw_dir = ` the directory where you want to
 save the MNIST raw data files. Run
 
-`SNNW.dataset.mnist.download_raw(raw_dir)`
+`snnw.dataset.mnist.download_raw(raw_dir)`
 
 Set `png_dir = ` the directory where you want to
 save the MNIST .png images and path text files. Run
 
-`SNNW.dataset.mnist.raw_to_png(raw_dir, png_dir)`
+`snnw.dataset.mnist.raw_to_png(raw_dir, png_dir)`
 
 Set `npy_dir = ` the directory where you want to
 save the MNIST .npy image and label numpy arrays. Run
 
-`SNNW.dataset.mnist.png_to_npy(png_dir, npy_dir)`
+`snnw.dataset.mnist.png_to_npy(png_dir, npy_dir)`
 
 ## Get model config
 Set `config_path = ` the path to where you want to save
 the training/testing model's config file. Run
 
-`SNNW.nn.config.get_config(config_path, 1)`
+`snnw.nn.config.get_config(config_path, 1)`
 or
-`SNNW.nn.config.get_config(config_path, 2)`
+`snnw.nn.config.get_config(config_path, 2)`
 
 to write sample config file 1 or 2 to `config_path`,
 or write your own config file and place it where
@@ -65,7 +65,7 @@ like to train for. The default is `60,000`.
 Set `learning_rate = ` the learning rate you would like to 
 train with. The default is `5e-4`.
 
-Run `SNNW.train(model_dir, config_path, train_image_path,
+Run `snnw.train(model_dir, config_path, train_image_path,
 train_label_path, steps, learning_rate)`.
 
 *Note:* if you get a NaN error or "not a probability array"
@@ -86,5 +86,5 @@ the training label arrays are located.
 This file should be located inside the `npy_dir`
 you specified earlier.
 
-Run `SNNW.evaluate(model_dir, config_path, test_image_path,
+Run `snnw.evaluate(model_dir, config_path, test_image_path,
 test_label_path)`.

@@ -6,13 +6,13 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'SNNW'
+NAME = 'snnw'
 DESCRIPTION = 'My custom neural net architecture written in Python to practice my ML skills.'
 URL = 'https://github.com/juliustao/Slowest-Neural-Net-in-the-West'
 EMAIL = 'juliusltao@gmail.com'
 AUTHOR = 'Julius Tao'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.1.12'
+VERSION = '0.2.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -96,7 +96,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=['SNNW'],
+    packages=['snnw'],
 
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
