@@ -2,107 +2,83 @@
 My custom neural net architecture written in Python to 
 practice my ML skills.
 
-## Requirements
-I successfully ran this project on Python 3.6.9,
-but I'm sure that any Python version >= 3.6 works.
-The Python packages required are in the requirements.txt.
 
-Please create a new Python virtual environment to run
-this project in so there are no dependency conflicts.
+## Install
+Make a new Python virtual environment (version >= 3.6).
+Install this project with pip. In terminal, run
 
-## TL;DR How-To
-In terminal, navigate to this project's directory and run:
-```
-python3 datasets/mnist/download_raw.py
-python3 datasets/mnist/raw_to_png.py
-python3 datasets/mnist/png_to_npy.py
-python3 train.py
-python3 evaluate.py
-```
+`pip3 install SNNW`
 
-## Folders
+## Download MNIST dataset
+Open a new Python shell or Jupyter Notebook and run
 
-### activations/
-This folder contains the functions and derivatives for 
-the following activation functions:
-1. relu
-2. sigmoid
-3. softmax
-4. tanh
+`import SNNW`
 
-Currently, only the above activation functions are supported.
+Set `raw_dir = ` the directory where you want to
+save the MNIST raw data files. Run
 
-### datasets/
-This folder contains scripts to download and process the 
-MNIST dataset. Navigate to the datasets/mnist directory and 
-execute the following commands:
-1. `python3 download_raw.py`
-2. `python3 raw_to_png.py`
-3. `python3 png_to_npy.py`
+`SNNW.dataset.mnist.download_raw(raw_dir)`
 
-### losses/
-This folder contains the functions and derivatives for
-the following loss functions:
-1. cross-entropy
+Set `png_dir = ` the directory where you want to
+save the MNIST .png images and path text files. Run
 
-Currently, only the above activation functions are supported. 
+`SNNW.dataset.mnist.raw_to_png(raw_dir, png_dir)`
 
-### models/
-This folder contains a folder for each model.
+Set `npy_dir = ` the directory where you want to
+save the MNIST .npy image and label numpy arrays. Run
 
-Each model's folder contains a config.txt file that specifies
-how to build that model.
-To create your own custom config.txt file, just follow
-the format of the config.txt files that are included.
+`SNNW.dataset.mnist.png_to_npy(png_dir, npy_dir)`
 
-After training, the models' weights and biases
-will be saved to the model's folder.
+## Get model config
+Set `config_path = ` the path to where you want to save
+the training/testing model's config file. Run
 
-## Files
+`SNNW.nn.config.get_config_1(config_path)`
+or
+`SNNW.nn.config.get_config_2(config_path)`
 
-### .gitignore
-The file that specifies what files/folders to ignore
-when adding and committing with git.
+to write a sample config file to `config_path`,
+or write your own config file and place it where
+`config_path` points to.
 
-### evaluate.py
-Specify the directory of the model you would like to evaluate
-on in the evaluate.py file.
+If you write a custom config file, make sure that it
+follows the given format to prevent run-time errors!
 
-*Note:* The folder must contain the 
-`config.txt`, `weights.npz`, and`biases.npz`files.
-After specifying, you can run this file with the command
-`python3 evaluate.py`. 
 
-### helper.py
-This file contains a helper method to load the `config.txt`
-files found in a model's directory.
+## Train model
+Set `model_dir = ` the directory where the trained model's
+weights and biases will be stored.
 
-### LICENSE
-MIT License. Included to appease lawyers.
+Set `train_image_path = ` the path to where the .npy file for
+the training image arrays are located.
+This file should be located inside the `npy_dir`
+you specified earlier. 
 
-### nn.py
-This file contains the Model and Layer class that are
-inherited from to create Model and Layer objects used
-during training and evaluation.
+Set `train_label_path = ` the path to where the .npy file for
+the training label arrays are located.
+This file should be located inside the `npy_dir`
+you specified earlier.
 
-### requirements.txt
-This file specifies the Python packages and versions
-that are required to run this project.
+Set `steps = ` the number of training steps you would
+like to train for. The default is `60,000`.
 
-If you `git clone` this project, you can run
-`pip install -r requirements.txt` to install all of the
-dependencies in the requirements.txt file.
+Set `learning_rate = ` the learning rate you would like to 
+train with. The default is `5e-4`.
 
-### setup.py
-This is the setup script used for packaging this project.
+Run `SNNW.train(model_dir, config_path, train_image_path,
+train_label_path, steps, learning_rate)`.
 
-### train.py
-Specify the directory of the model you would like to evaluate
-on in the evaluate.py file.
+## Test model
 
-*Note:* The folder must contain a `config.txt` file.
-After specifying, you can run this file with the command
-`python3 evaluate.py`.
+Set `test_image_path = ` the path to where the .npy file for
+the training image arrays are located.
+This file should be located inside the `npy_dir`
+you specified earlier. 
 
-The weights and biases of the trained model will be saved
-in the model directory that was specified.
+Set `test_label_path = ` the path to where the .npy file for
+the training label arrays are located.
+This file should be located inside the `npy_dir`
+you specified earlier.
+
+Run `SNNW.evaluate(model_dir, config_path, test_image_path,
+test_label_path)`.

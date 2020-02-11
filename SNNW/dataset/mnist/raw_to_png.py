@@ -7,8 +7,6 @@ from array import array
 import png
 from tqdm import tqdm
 
-import save_dirs
-
 
 def read(dataset="train", path="."):
     if dataset is "train":
@@ -41,25 +39,32 @@ def write_dataset(labels, data, size, rows, cols, output_path, dataset):
         if not os.path.exists(dir):
             os.makedirs(dir)
 
+    txt_path = os.path.join(output_path, dataset + ".txt")
+
+    # erase .txt file if it exists
+    open(txt_path, "w").close()
+
     # write data
     i = 0
-    print("Writing {} dataset".format(dataset))
     for label in tqdm(labels):
         output_filename = os.path.join(output_dirs[label], str(i) + ".png")
         with open(output_filename, "wb") as h:
             w = png.Writer(cols, rows, greyscale=True)
             data_i = [data[(i*rows*cols + j*cols): (i*rows*cols + (j+1)*cols)] for j in range(rows)]
             w.write(h, data_i)
-        txt_path = os.path.join(output_path, dataset + ".txt")
         with open(txt_path, "a") as f:
             f.write(output_filename + "\n")
         i += 1
 
 
-if __name__ == "__main__":
-    input_path = os.path.abspath(save_dirs.raw_dir)
-    output_path = os.path.abspath(save_dirs.png_dir)
+def raw_to_png(raw_dir, png_dir):
+    raw_dir = os.path.abspath(raw_dir)
+    png_dir = os.path.abspath(png_dir)
+
+    if not os.path.exists(png_dir):
+        os.makedirs(png_dir)
 
     for dataset in ["train", "test"]:
-        labels, data, size, rows, cols = read(dataset, input_path)
-        write_dataset(labels, data, size, rows, cols, output_path, dataset)
+        print("Writing {} dataset".format(dataset))
+        labels, data, size, rows, cols = read(dataset, raw_dir)
+        write_dataset(labels, data, size, rows, cols, png_dir, dataset)

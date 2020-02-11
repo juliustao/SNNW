@@ -3,11 +3,9 @@ import os
 import numpy as np
 from tqdm import tqdm
 
-from losses import cross_entropy
-from activations import relu
-from activations import sigmoid
-from activations import softmax
-from activations import tanh
+from SNNW.nn.loss import cross_entropy
+from SNNW.nn.activation import sigmoid, softmax, relu, tanh
+from SNNW.nn import Layer
 
 name2function = {
     'relu': relu.function,
@@ -22,29 +20,6 @@ name2derivative = {
     # 'softmax': softmax.derivative,
     'tanh': tanh.derivative,
 }
-
-
-def kaiming(in_size, out_size):
-    return np.random.normal(size=(in_size, out_size)) * np.sqrt(2.0/in_size)
-
-
-class Layer:
-    # These layers are fully connected by default
-    def __init__(self, layer_type, in_size, out_size, activation):
-        # only type supported is fully connected
-        self.layer_type = "fully_connected"
-        # in_size is number of neuron in previous layer
-        self.in_size = in_size
-        # out_size is number of neurons in current layer
-        self.out_size = out_size
-        # activation function name
-        self.activation = activation
-        # make random weight array
-        self.weights = kaiming(in_size, out_size)
-        # make random bias array
-        self.biases = np.zeros(shape=(1, self.out_size))
-        # make output array
-        self.output = None
 
 
 class Model:
