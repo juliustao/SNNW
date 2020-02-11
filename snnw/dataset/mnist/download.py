@@ -11,7 +11,7 @@ files = [
 ]
 
 
-def download_raw(raw_dir):
+def raw(raw_dir):
     raw_dir = os.path.realpath(raw_dir)
     if not os.path.exists(raw_dir):
         os.makedirs(raw_dir)

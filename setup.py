@@ -12,7 +12,7 @@ URL = 'https://github.com/juliustao/Slowest-Neural-Net-in-the-West'
 EMAIL = 'juliusltao@gmail.com'
 AUTHOR = 'Julius Tao'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.2.0'
+VERSION = '0.2.3'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -96,7 +96,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=['snnw'],
+    packages=find_packages(include=['snnw', 'snnw.*']),
 
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],

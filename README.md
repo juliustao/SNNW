@@ -17,25 +17,25 @@ Open a new Python shell or Jupyter Notebook and run
 Set `raw_dir = ` the directory where you want to
 save the MNIST raw data files. Run
 
-`snnw.dataset.mnist.download_raw(raw_dir)`
+`snnw.dataset.mnist.download.raw(raw_dir)`
 
 Set `png_dir = ` the directory where you want to
 save the MNIST .png images and path text files. Run
 
-`snnw.dataset.mnist.raw_to_png(raw_dir, png_dir)`
+`snnw.dataset.mnist.convert.raw_to_png(raw_dir, png_dir)`
 
 Set `npy_dir = ` the directory where you want to
 save the MNIST .npy image and label numpy arrays. Run
 
-`snnw.dataset.mnist.png_to_npy(png_dir, npy_dir)`
+`snnw.dataset.mnist.convert.png_to_npy(png_dir, npy_dir)`
 
 ## Get model config
 Set `config_path = ` the path to where you want to save
 the training/testing model's config file. Run
 
-`snnw.nn.config.get_config(config_path, 1)`
+`snnw.nn.config.get(config_path, 1)`
 or
-`snnw.nn.config.get_config(config_path, 2)`
+`snnw.nn.config.get(config_path, 2)`
 
 to write sample config file 1 or 2 to `config_path`,
 or write your own config file and place it where
