@@ -3,9 +3,9 @@ import os
 import numpy as np
 from tqdm import tqdm
 
-from SNNW.nn.loss import cross_entropy
-from SNNW.nn.activation import sigmoid, softmax, relu, tanh
-from SNNW.nn import Layer
+from loss import cross_entropy
+from activation import sigmoid, softmax, relu, tanh
+from layer import Layer
 
 name2function = {
     'relu': relu.function,
