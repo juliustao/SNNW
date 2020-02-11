@@ -1,6 +1,6 @@
 import numpy as np
 
-from weight_init import kaiming
+from SNNW.nn.weight_init import kaiming
 
 
 class Layer:

@@ -2,8 +2,8 @@ import os
 
 import numpy as np
 
-from nn.model import Model
-from nn.config.load_config import load_config
+from SNNW.nn.model import Model
+from SNNW.nn.config.load_config import load_config
 
 
 def train(model_dir, config_path, image_path, label_path, steps=60000, learning_rate=5e-4):

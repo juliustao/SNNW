@@ -12,7 +12,7 @@ URL = 'https://github.com/juliustao/Slowest-Neural-Net-in-the-West'
 EMAIL = 'juliusltao@gmail.com'
 AUTHOR = 'Julius Tao'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.1.0'
+VERSION = '0.1.12'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
