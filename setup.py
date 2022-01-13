@@ -16,7 +16,7 @@ VERSION = '0.2.8'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'numpy==1.18.1',
+    'numpy==1.21.0',
     'pypng==0.0.20',
     'Pillow==9.0.0',
     'tqdm==4.42.1',
