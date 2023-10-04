@@ -18,7 +18,7 @@ VERSION = '0.2.8'
 REQUIRED = [
     'numpy==1.22.0',
     'pypng==0.0.20',
-    'Pillow==9.3.0',
+    'Pillow==10.0.1',
     'tqdm==4.42.1',
 ]
 
